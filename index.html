@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="KisanKarya tractor marketplace inspired by a modern Indian tractor discovery portal." />
+  <title>KisanKarya - Tractors in India</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="container nav-wrap">
+      <a class="brand" href="#">Kisan<span>Karya</span></a>
+      <button class="menu-toggle" aria-label="Toggle navigation">☰</button>
+      <nav class="nav">
+        <a href="#tractors">New Tractors</a>
+        <a href="#brands">Tractor Brands</a>
+        <a href="#used">Used Tractors</a>
+        <a href="#compare">Compare Tractors</a>
+        <a href="#news">News &amp; Updates</a>
+        <a href="#more">More ▾</a>
+      </nav>
+      <button class="login-btn">Login</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <span class="eyebrow">India's smart tractor discovery platform</span>
+          <h1>Find the <strong>Right Tractor</strong> for Your Farm</h1>
+          <p>Compare tractor prices, horsepower, features and financing options from India's leading brands.</p>
+          <div class="hero-actions">
+            <a class="primary-btn" href="#tractors">Explore Tractors</a>
+            <a class="secondary-btn" href="#compare">Compare Models</a>
+          </div>
+        </div>
+        <div class="finder-card">
+          <div class="segmented"><button class="active">NEW</button><button>SECOND HAND</button></div>
+          <h2>Find the Best Tractor</h2>
+          <label>Brand<select><option>Select Brand</option><option>Mahindra</option><option>John Deere</option><option>Swaraj</option><option>Farmtrac</option></select></label>
+          <div class="field-row">
+            <label>HP<select><option>Select HP</option><option>Under 30 HP</option><option>30 - 50 HP</option><option>50 - 70 HP</option><option>Above 70 HP</option></select></label>
+            <label>Price<select><option>Select Price</option><option>Under ₹5 Lakh</option><option>₹5 - ₹8 Lakh</option><option>₹8 - ₹12 Lakh</option><option>Above ₹12 Lakh</option></select></label>
+          </div>
+          <button class="find-btn">FIND TRACTOR</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="trust-strip">
+      <div class="container trust-items">
+        <span>✓ 300+ Tractor Models</span><span>✓ Price &amp; Specs</span><span>✓ Easy Comparisons</span><span>✓ Trusted Brands</span>
+      </div>
+    </section>
+
+    <section id="tractors" class="section container">
+      <div class="section-head"><div><span class="eyebrow">Popular choices</span><h2>Tractors in India</h2></div><a href="#">View All →</a></div>
+      <div class="tabs"><button class="tab active">POPULAR</button><button class="tab">LATEST</button><button class="tab">UPCOMING</button></div>
+      <div class="cards" id="tractorGrid"></div>
+    </section>
+
+    <section id="brands" class="section alt-section">
+      <div class="container">
+        <div class="section-head"><div><span class="eyebrow">Explore by manufacturer</span><h2>Popular Tractor Brands</h2></div><a href="#">All Brands →</a></div>
+        <div class="brand-grid">
+          <div class="brand-card">Mahindra</div><div class="brand-card">Swaraj</div><div class="brand-card">John Deere</div><div class="brand-card">Farmtrac</div><div class="brand-card">Massey Ferguson</div><div class="brand-card">Sonalika</div><div class="brand-card">Eicher</div><div class="brand-card">Powertrac</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="compare" class="section container compare-banner">
+      <div><span class="eyebrow">Choose with confidence</span><h2>Compare Tractors Side by Side</h2><p>Check horsepower, engine capacity, lifting capacity and price in one place.</p></div>
+      <a class="primary-btn" href="#">Start Comparing</a>
+    </section>
+
+    <section id="used" class="section used-section">
+      <div class="container used-grid">
+        <div><span class="eyebrow">Second-hand marketplace</span><h2>Buy &amp; Sell Used Tractors</h2><p>Discover quality pre-owned tractors and connect with sellers.</p><div class="hero-actions"><a class="primary-btn" href="#">Buy Used</a><a class="secondary-btn" href="#">Sell Your Tractor</a></div></div>
+        <div class="used-card"><div class="used-stat"><strong>4,500+</strong><span>Used listings</span></div><div class="used-stat"><strong>5★</strong><span>Easy seller ratings</span></div><div class="used-stat"><strong>24/7</strong><span>Online discovery</span></div></div>
+      </div>
+    </section>
+
+    <section id="news" class="section container">
+      <div class="section-head"><div><span class="eyebrow">Latest from agriculture</span><h2>News &amp; Updates</h2></div><a href="#">Read All →</a></div>
+      <div class="news-grid"><article><span>TRACTOR NEWS</span><h3>Top 10 Tractors Under 50 HP for Indian Farms</h3><p>Explore popular models and key specifications before you buy.</p></article><article><span>AGRICULTURE</span><h3>Best Farm Equipment for Smarter Mechanization</h3><p>Helpful buying tips for modern farming operations.</p></article><article><span>FINANCE</span><h3>Understand Tractor EMI Before You Purchase</h3><p>Compare budgets and choose a monthly payment that works for you.</p></article></div>
+    </section>
+  </main>
+
+  <footer id="more" class="footer"><div class="container footer-grid"><div><a class="brand footer-brand" href="#">Kisan<span>Karya</span></a><p>Your digital destination for tractors, farm equipment and agricultural insights.</p></div><div><h4>Quick Links</h4><a href="#tractors">New Tractors</a><a href="#used">Used Tractors</a><a href="#compare">Compare</a><a href="#news">News</a></div><div><h4>By HP</h4><a href="#">Under 30 HP</a><a href="#">30-50 HP</a><a href="#">50-70 HP</a><a href="#">Above 70 HP</a></div><div><h4>Support</h4><a href="#">Contact Us</a><a href="#">Dealer Network</a><a href="#">Privacy Policy</a><a href="#">Terms</a></div></div><div class="container copyright">© 2026 KisanKarya. All rights reserved.</div></footer>
+  <script src="script.js"></script>
+</body>
+</html>
