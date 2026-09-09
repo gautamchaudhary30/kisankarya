@@ -2,6 +2,7 @@ import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
 import { connectDB } from './config/db.js'
+import authRoutes from './routes/auth.js'
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -12,6 +13,8 @@ app.use(express.json())
 app.get('/api/health', (req, res) => {
   res.json({ ok: true, message: 'KisanKarya API is running' })
 })
+
+app.use('/api/auth', authRoutes)
 
 await connectDB()
 
