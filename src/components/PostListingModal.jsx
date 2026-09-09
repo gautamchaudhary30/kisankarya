@@ -3,7 +3,7 @@ import { Camera, ChevronDown, MapPin, X } from 'lucide-react'
 
 const categories = ['Farm Tools', 'Implements', 'Sprayers', 'Irrigation', 'Seeds & Fertilizers', 'Other']
 
-export default function PostListingModal({ onClose, onSubmit }) {
+export default function PostListingModal({ onClose, onSubmit, onViewListings }) {
   const [category, setCategory] = useState('')
   const [title, setTitle] = useState('')
   const [price, setPrice] = useState('')
@@ -15,21 +15,14 @@ export default function PostListingModal({ onClose, onSubmit }) {
   const submitListing = () => {
     if (!title.trim() || !category) return
     onSubmit?.({
-      id: Date.now(),
-      title: title.trim(),
-      name: title.trim(),
-      price: price.trim() || 'Price on request',
-      category,
-      condition,
-      location: location.trim() || 'Location not added',
-      description: description.trim(),
-      status: 'Not approved',
+      id: Date.now(), title: title.trim(), name: title.trim(), price: price.trim() || 'Price on request', category, condition,
+      location: location.trim() || 'Location not added', description: description.trim(), status: 'Not approved',
       image: 'https://images.unsplash.com/photo-1598512752271-33f913a5af13?auto=format&fit=crop&w=900&q=85',
     })
     setSubmitted(true)
   }
 
-  if (submitted) return <div className="modal-backdrop"><div className="post-modal success-modal"><div className="success-icon">✓</div><span className="post-kicker">SUBMITTED FOR REVIEW</span><h2>Listing submitted</h2><p>Aapki listing <b>My Listings</b> mein <b>Not approved</b> status ke saath save ho gayi hai. Admin approval ke baad status update hoga.</p><button className="primary-btn" onClick={onClose}>View My Listings</button></div></div>
+  if (submitted) return <div className="modal-backdrop"><div className="post-modal success-modal"><div className="success-icon">✓</div><span className="post-kicker">SUBMITTED FOR REVIEW</span><h2>Listing submitted</h2><p>Aapki listing <b>My Listings</b> mein <b>Not approved</b> status ke saath save ho gayi hai. Admin approval ke baad status update hoga.</p><button className="primary-btn" onClick={onViewListings || onClose}>View My Listings</button></div></div>
 
   return <div className="modal-backdrop"><div className="post-modal">
     <button className="modal-close" onClick={onClose}><X/></button>
