@@ -8,6 +8,7 @@ import ListingDetail from './pages/ListingDetail'
 import Messages from './pages/Messages'
 import MyListings from './pages/MyListings'
 import './detail.css'
+import './mobile-features.css'
 
 function LoginPreview({ onClose, onMyListings }) {
   const [role, setRole] = useState(null)
