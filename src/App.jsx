@@ -4,6 +4,8 @@ import Header from './components/Header'
 import BottomNav from './components/BottomNav'
 import PostListingModal from './components/PostListingModal'
 import Home from './pages/Home'
+import ListingDetail from './pages/ListingDetail'
+import './detail.css'
 
 function LoginPreview({ onClose }) {
   const [role, setRole] = useState(null)
@@ -20,10 +22,16 @@ function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [postOpen, setPostOpen] = useState(false)
   const [loginOpen, setLoginOpen] = useState(false)
+  const [selectedItem, setSelectedItem] = useState(null)
+
+  const openDetail = item => { setSelectedItem(item); window.scrollTo({ top: 0, behavior: 'smooth' }) }
+  const closeDetail = () => { setSelectedItem(null); window.scrollTo({ top: 0, behavior: 'smooth' }) }
+
+  if (selectedItem) return <div className="app-shell"><ListingDetail item={selectedItem} onBack={closeDetail}/></div>
 
   return <div className="app-shell">
     <Header menuOpen={menuOpen} setMenuOpen={setMenuOpen} onLogin={()=>setLoginOpen(true)} />
-    <Home onPost={()=>setPostOpen(true)} />
+    <Home onPost={()=>setPostOpen(true)} onSelect={openDetail} />
     <footer className="site-footer">
       <div className="container footer-main"><div className="footer-about"><a className="brand-logo footer-logo" href="#home"><span className="brand-leaf">K</span><span>Kisan<span>Karya</span><small>Kisan ke saathi, har kaam mein</small></span></a><p>KisanKarya is a farmer-first marketplace for tractors, farm equipment and everyday agricultural tools.</p><div className="socials"><a><Instagram/></a><a><Facebook/></a><a><Youtube/></a></div></div><div><h4>Marketplace</h4><a href="#tractors">Tractors</a><a href="#tools">Farm Tools</a><a href="#explore">Explore Listings</a><a href="#brands">Brands</a></div><div><h4>For Farmers</h4><a href="#sell">Sell an Item</a><a href="#safety">Safe Buying</a><a href="#help">Help Centre</a><a href="#contact">Contact Us</a></div><div><h4>Contact</h4><p className="contact-line"><Phone/> +91 00000 00000</p><p className="contact-line"><Mail/> hello@kisankarya.in</p></div></div>
       <div className="footer-bottom"><div className="container"><span>© 2026 KisanKarya</span><span>Built for Indian farmers · Privacy · Terms</span></div></div>
