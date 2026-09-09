@@ -7,17 +7,20 @@ import Home from './pages/Home'
 import ListingDetail from './pages/ListingDetail'
 import Messages from './pages/Messages'
 import MyListings from './pages/MyListings'
+import EngineerHome from './pages/EngineerHome'
 import './detail.css'
 import './mobile-features.css'
 
-function LoginPreview({ onClose, onMyListings }) {
-  const [role, setRole] = useState(null)
+function LoginPreview({ onClose, onMyListings, onEngineer }) {
   return <div className="modal-backdrop"><div className="login-choice">
     <button className="modal-close" onClick={onClose}>×</button>
     <span className="login-mark">K</span><span className="post-kicker">WELCOME TO KISANKARYA</span>
-    <h2>{role ? `Continue as ${role === 'engineer' ? 'Engineer' : 'User'}` : 'Login to KisanKarya'}</h2>
-    <p>{role ? 'Enter your mobile number to continue.' : 'Choose how you want to use the marketplace.'}</p>
-    {!role ? <div className="role-options"><button onClick={()=>setRole('user')}><b>👨‍🌾 As a User</b><small>Buy and sell small farm tools</small></button><button onClick={()=>setRole('engineer')}><b>🧰 As an Engineer</b><small>Add tractors & heavy machinery</small></button></div> : <><input className="modal-input" placeholder="10-digit mobile number"/><button className="primary-btn full">Continue with OTP</button><button className="text-btn" onClick={()=>setRole(null)}>← Change role</button></>}
+    <h2>Login to KisanKarya</h2>
+    <p>Choose how you want to use the marketplace.</p>
+    <div className="role-options">
+      <button onClick={onClose}><b>👨‍🌾 As a User</b><small>Buy, sell and explore farm products</small></button>
+      <button onClick={onEngineer}><b>🧰 As a Engineer</b><small>List products & inspect farmer uploads</small></button>
+    </div>
     <button className="my-listings-login-link" onClick={onMyListings}>My Listings →</button>
   </div></div>
 }
@@ -39,11 +42,13 @@ function App() {
   const closeDetail = () => { setSelectedItem(null); setPage('home'); window.scrollTo({ top: 0, behavior: 'smooth' }) }
   const openMessages = item => { setMessageItem(item || { name: 'KisanKarya Seller', price: 'Marketplace chat' }); setSelectedItem(null); setPage('messages'); window.scrollTo({ top: 0, behavior: 'smooth' }) }
   const openMyListings = () => { setLoginOpen(false); setPostOpen(false); setSelectedItem(null); setMessageItem(null); setPage('my-listings'); window.scrollTo({ top: 0, behavior: 'smooth' }) }
+  const openEngineer = () => { setLoginOpen(false); setPostOpen(false); setSelectedItem(null); setMessageItem(null); setPage('engineer'); window.scrollTo({ top: 0, behavior: 'smooth' }) }
   const addListing = listing => setMyListings(prev => [listing, ...prev])
 
   if (page === 'messages') return <div className="app-shell"><Messages seller={messageItem?.seller || 'Ramesh Patidar'} item={messageItem} onBack={() => { setMessageItem(null); setPage('home') }} /></div>
   if (page === 'detail') return <div className="app-shell"><ListingDetail item={selectedItem} onBack={closeDetail} onMessage={() => openMessages(selectedItem)} /></div>
   if (page === 'my-listings') return <div className="app-shell"><MyListings listings={myListings} onBack={() => setPage('home')} /></div>
+  if (page === 'engineer') return <div className="app-shell"><EngineerHome myListings={myListings} onBack={() => setPage('home')} onPost={()=>setPostOpen(true)} /></div>
 
   return <div className="app-shell">
     <Header menuOpen={menuOpen} setMenuOpen={setMenuOpen} onLogin={()=>setLoginOpen(true)} />
@@ -54,7 +59,7 @@ function App() {
     </footer>
     <BottomNav onPost={()=>setPostOpen(true)} onLogin={()=>setLoginOpen(true)} onMessages={()=>openMessages()} onMyListings={openMyListings} />
     {postOpen && <PostListingModal onClose={()=>setPostOpen(false)} onSubmit={addListing} onViewListings={openMyListings} />}
-    {loginOpen && <LoginPreview onClose={()=>setLoginOpen(false)} onMyListings={openMyListings} />}
+    {loginOpen && <LoginPreview onClose={()=>setLoginOpen(false)} onMyListings={openMyListings} onEngineer={openEngineer} />}
     {!postOpen && !loginOpen && <button className="my-listings-floating" onClick={openMyListings}>My Listings</button>}
     {myListings.length > 0 && <div className="my-listings-preview"><div><span>MY LISTINGS</span><b>{myListings.length} item{myListings.length > 1 ? 's' : ''} · {myListings[0].status}</b></div><button onClick={openMyListings}>View →</button></div>}
   </div>
