@@ -8,12 +8,81 @@ const tractors = [
   { name: 'Massey Ferguson 241 DI', power: '42 HP', price: '₹ 6.70 - 7.20 Lakh' },
 ]
 const brands = ['Mahindra', 'Swaraj', 'John Deere', 'Massey Ferguson', 'Sonalika', 'New Holland', 'Farmtrac', 'Eicher']
+const API_URL = 'http://localhost:5000/api'
 
 function App() {
   const [menu, setMenu] = useState(false)
   const [query, setQuery] = useState('')
   const [loginOpen, setLoginOpen] = useState(false)
   const [role, setRole] = useState(null)
+  const [mobile, setMobile] = useState('')
+  const [otp, setOtp] = useState('')
+  const [otpSent, setOtpSent] = useState(false)
+  const [devOtp, setDevOtp] = useState('')
+  const [loginMessage, setLoginMessage] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [loggedInUser, setLoggedInUser] = useState(null)
+
+  const resetLogin = () => {
+    setLoginOpen(false)
+    setRole(null)
+    setMobile('')
+    setOtp('')
+    setOtpSent(false)
+    setDevOtp('')
+    setLoginMessage('')
+  }
+
+  const sendOtp = async () => {
+    setLoginMessage('')
+    if (!/^[6-9]\d{9}$/.test(mobile)) {
+      setLoginMessage('Please enter a valid 10-digit mobile number.')
+      return
+    }
+    setLoading(true)
+    try {
+      const response = await fetch(`${API_URL}/auth/send-otp`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mobile, role }),
+      })
+      const data = await response.json()
+      if (!response.ok) throw new Error(data.message || 'Could not send OTP')
+      setOtpSent(true)
+      setDevOtp(data.devOtp || '')
+      setLoginMessage(data.devOtp ? `Development OTP: ${data.devOtp}` : 'OTP sent successfully.')
+    } catch (error) {
+      setLoginMessage(error.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const verifyOtp = async () => {
+    setLoginMessage('')
+    if (!/^\d{6}$/.test(otp)) {
+      setLoginMessage('Please enter the 6-digit OTP.')
+      return
+    }
+    setLoading(true)
+    try {
+      const response = await fetch(`${API_URL}/auth/verify-otp`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mobile, role, otp }),
+      })
+      const data = await response.json()
+      if (!response.ok) throw new Error(data.message || 'OTP verification failed')
+      setLoggedInUser(data.user)
+      localStorage.setItem('kisankarya_user', JSON.stringify(data.user))
+      setLoginMessage('Login successful!')
+      setTimeout(resetLogin, 700)
+    } catch (error) {
+      setLoginMessage(error.message)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <div className="site">
@@ -22,7 +91,7 @@ function App() {
         <nav className={menu ? 'nav-links open' : 'nav-links'}>
           <a href="#new" onClick={() => setMenu(false)}>New Tractors</a><a href="#used" onClick={() => setMenu(false)}>Used Tractors</a><a href="#brands" onClick={() => setMenu(false)}>Brands</a><a href="#compare" onClick={() => setMenu(false)}>Compare</a><a href="#implements" onClick={() => setMenu(false)}>Implements</a><a href="#news" onClick={() => setMenu(false)}>News</a>
         </nav>
-        <button className="login-btn" onClick={() => { setRole(null); setLoginOpen(true) }}><UserRound size={16}/> Login</button>
+        <button className="login-btn" onClick={() => { setRole(null); setLoginOpen(true); setLoginMessage('') }}><UserRound size={16}/> {loggedInUser ? loggedInUser.role === 'engineer' ? 'Engineer' : 'Account' : 'Login'}</button>
         <button className="menu-btn" onClick={() => setMenu(!menu)} aria-label="menu">{menu ? <X/> : <Menu/>}</button>
       </div></header>
 
@@ -43,7 +112,7 @@ function App() {
       </main>
       <footer><div className="container footer-grid"><div><a className="logo" href="#top"><span className="logo-mark">K</span>Kisan<span>Karya</span></a><p>Your trusted destination for tractors, implements and farming information.</p></div><div><h4>Tractors</h4><a href="#new">New Tractors</a><a href="#used">Used Tractors</a><a href="#brands">Tractor Brands</a></div><div><h4>Explore</h4><a href="#compare">Compare Tractors</a><a href="#implements">Implements</a><a href="#news">News & Updates</a></div><div><h4>Support</h4><a href="#contact">Contact Us</a><a href="#privacy">Privacy Policy</a></div></div><div className="copyright">© 2026 KisanKarya. All rights reserved.</div></footer>
 
-      {loginOpen && <div className="login-overlay" onClick={()=>setLoginOpen(false)}><div className="login-modal" onClick={e=>e.stopPropagation()}><button className="close-login" onClick={()=>setLoginOpen(false)}><X size={20}/></button>{!role ? <><div className="login-icon"><UserRound/></div><p className="eyebrow">WELCOME TO KISANKARYA</p><h2>Login as</h2><p className="login-subtitle">Choose how you want to use KisanKarya.</p><button className="role-card" onClick={()=>setRole('user')}><span className="role-icon"><UserRound/></span><span><b>As a User</b><small>Find tractors, compare prices & explore listings</small></span><ArrowRight/></button><button className="role-card" onClick={()=>setRole('engineer')}><span className="role-icon"><Wrench/></span><span><b>As an Engineer</b><small>Add and manage tractor listings for customers</small></span><ArrowRight/></button></> : <><button className="back-role" onClick={()=>setRole(null)}>← Change role</button><div className="login-icon">{role==='engineer'?<Wrench/>:<UserRound/>}</div><p className="eyebrow">{role==='engineer'?'ENGINEER LOGIN':'USER LOGIN'}</p><h2>Continue as {role==='engineer'?'Engineer':'User'}</h2><p className="login-subtitle">Enter your mobile number to continue.</p><label>Mobile Number</label><input className="mobile-input" type="tel" placeholder="10-digit mobile number" maxLength="10"/><button className="continue-btn">Send OTP <ArrowRight size={17}/></button></>}</div></div>}
+      {loginOpen && <div className="login-overlay" onClick={resetLogin}><div className="login-modal" onClick={e=>e.stopPropagation()}><button className="close-login" onClick={resetLogin}><X size={20}/></button>{!role ? <><div className="login-icon"><UserRound/></div><p className="eyebrow">WELCOME TO KISANKARYA</p><h2>Login as</h2><p className="login-subtitle">Choose how you want to use KisanKarya.</p><button className="role-card" onClick={()=>{setRole('user');setLoginMessage('')}}><span className="role-icon"><UserRound/></span><span><b>As a User</b><small>Find tractors, compare prices & explore listings</small></span><ArrowRight/></button><button className="role-card" onClick={()=>{setRole('engineer');setLoginMessage('')}}><span className="role-icon"><Wrench/></span><span><b>As an Engineer</b><small>Add and manage tractor listings for customers</small></span><ArrowRight/></button></> : <><button className="back-role" onClick={()=>{setRole(null);setOtpSent(false);setOtp('');setLoginMessage('')}}>← Change role</button><div className="login-icon">{role==='engineer'?<Wrench/>:<UserRound/>}</div><p className="eyebrow">{role==='engineer'?'ENGINEER LOGIN':'USER LOGIN'}</p><h2>{otpSent ? 'Enter OTP' : `Continue as ${role==='engineer'?'Engineer':'User'}`}</h2><p className="login-subtitle">{otpSent ? `OTP sent for +91 ${mobile}` : 'Enter your mobile number to continue.'}</p>{!otpSent ? <><label>Mobile Number</label><input className="mobile-input" type="tel" value={mobile} onChange={e=>setMobile(e.target.value.replace(/\D/g,'').slice(0,10))} placeholder="10-digit mobile number" maxLength="10"/><button className="continue-btn" onClick={sendOtp} disabled={loading}>{loading ? 'Sending...' : <>Send OTP <ArrowRight size={17}/></>}</button></> : <><label>6-digit OTP</label><input className="mobile-input" type="tel" inputMode="numeric" value={otp} onChange={e=>setOtp(e.target.value.replace(/\D/g,'').slice(0,6))} placeholder="Enter OTP" maxLength="6"/><button className="continue-btn" onClick={verifyOtp} disabled={loading}>{loading ? 'Verifying...' : <>Verify & Login <ArrowRight size={17}/></>}</button><button className="back-role" onClick={()=>{setOtpSent(false);setOtp('');setDevOtp('');setLoginMessage('')}}>← Change mobile number</button></>}{loginMessage && <p className="login-message">{loginMessage}</p>}{devOtp && <p className="dev-note">Development mode: OTP is shown above. Real SMS will be connected before production.</p>}</>}</div></div>}
     </div>
   )
 }
