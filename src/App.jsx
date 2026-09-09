@@ -12,7 +12,7 @@ const brands = ['Mahindra', 'Swaraj', 'John Deere', 'Massey Ferguson', 'Sonalika
 function App() {
   const [menu, setMenu] = useState(false)
   const [query, setQuery] = useState('')
-  const [loginOpen, setLoginOpen] = useState(true)
+  const [loginOpen, setLoginOpen] = useState(false)
   const [role, setRole] = useState(null)
   const [mobile, setMobile] = useState('')
   const [otp, setOtp] = useState('')
@@ -31,7 +31,6 @@ function App() {
     setLoginMessage('')
   }
 
-  // Frontend-only demo for now. Backend/real SMS OTP will be connected later.
   const sendOtp = () => {
     setLoginMessage('')
     if (!/^[6-9]\d{9}$/.test(mobile)) {
@@ -39,15 +38,15 @@ function App() {
       return
     }
     const generatedOtp = String(Math.floor(100000 + Math.random() * 900000))
-    setDevOtp(generatedOtp)
     setOtpSent(true)
+    setDevOtp(generatedOtp)
     setLoginMessage(`Demo OTP: ${generatedOtp}`)
   }
 
   const verifyOtp = () => {
     setLoginMessage('')
     if (otp !== devOtp) {
-      setLoginMessage('Incorrect OTP. Please enter the Demo OTP shown above.')
+      setLoginMessage('Invalid OTP. Please enter the demo OTP shown above.')
       return
     }
     const user = { mobile, role }
@@ -85,7 +84,7 @@ function App() {
       </main>
       <footer><div className="container footer-grid"><div><a className="logo" href="#top"><span className="logo-mark">K</span>Kisan<span>Karya</span></a><p>Your trusted destination for tractors, implements and farming information.</p></div><div><h4>Tractors</h4><a href="#new">New Tractors</a><a href="#used">Used Tractors</a><a href="#brands">Tractor Brands</a></div><div><h4>Explore</h4><a href="#compare">Compare Tractors</a><a href="#implements">Implements</a><a href="#news">News & Updates</a></div><div><h4>Support</h4><a href="#contact">Contact Us</a><a href="#privacy">Privacy Policy</a></div></div><div className="copyright">© 2026 KisanKarya. All rights reserved.</div></footer>
 
-      {loginOpen && <div className="login-overlay"><div className="login-modal">{!role ? <><div className="login-icon"><UserRound/></div><p className="eyebrow">WELCOME TO KISANKARYA</p><h2>Login as</h2><p className="login-subtitle">Choose how you want to use KisanKarya.</p><button className="role-card" onClick={()=>{setRole('user');setLoginMessage('')}}><span className="role-icon"><UserRound/></span><span><b>As a User</b><small>Find tractors, compare prices & explore listings</small></span><ArrowRight/></button><button className="role-card" onClick={()=>{setRole('engineer');setLoginMessage('')}}><span className="role-icon"><Wrench/></span><span><b>As an Engineer</b><small>Add and manage tractor listings for customers</small></span><ArrowRight/></button></> : <><button className="back-role" onClick={()=>{setRole(null);setOtpSent(false);setOtp('');setLoginMessage('')}}>← Change role</button><div className="login-icon">{role==='engineer'?<Wrench/>:<UserRound/>}</div><p className="eyebrow">{role==='engineer'?'ENGINEER LOGIN':'USER LOGIN'}</p><h2>{otpSent ? 'Enter OTP' : `Continue as ${role==='engineer'?'Engineer':'User'}`}</h2><p className="login-subtitle">{otpSent ? `OTP sent for +91 ${mobile}` : 'Enter your mobile number to continue.'}</p>{!otpSent ? <><label>Mobile Number</label><input className="mobile-input" type="tel" value={mobile} onChange={e=>setMobile(e.target.value.replace(/\D/g,'').slice(0,10))} placeholder="10-digit mobile number" maxLength="10"/><button className="continue-btn" onClick={sendOtp}>Send OTP <ArrowRight size={17}/></button></> : <><label>6-digit OTP</label><input className="mobile-input" type="tel" inputMode="numeric" value={otp} onChange={e=>setOtp(e.target.value.replace(/\D/g,'').slice(0,6))} placeholder="Enter OTP" maxLength="6"/><button className="continue-btn" onClick={verifyOtp}>Verify & Login <ArrowRight size={17}/></button><button className="back-role" onClick={()=>{setOtpSent(false);setOtp('');setDevOtp('');setLoginMessage('')}}>← Change mobile number</button></>}{loginMessage && <p className="login-message">{loginMessage}</p>}{devOtp && <p className="dev-note">Frontend demo: use the OTP shown above. Real SMS verification will be connected later.</p>}</>}</div></div>}
+      {loginOpen && <div className="login-overlay"><div className="login-modal"><button className="close-login" onClick={resetLogin}><X size={20}/></button>{!role ? <><div className="login-icon"><UserRound/></div><p className="eyebrow">WELCOME TO KISANKARYA</p><h2>Login as</h2><p className="login-subtitle">Choose how you want to use KisanKarya.</p><button className="role-card" onClick={()=>{setRole('user');setLoginMessage('')}}><span className="role-icon"><UserRound/></span><span><b>As a User</b><small>Find tractors, compare prices & explore listings</small></span><ArrowRight/></button><button className="role-card" onClick={()=>{setRole('engineer');setLoginMessage('')}}><span className="role-icon"><Wrench/></span><span><b>As an Engineer</b><small>Add and manage tractor listings for customers</small></span><ArrowRight/></button></> : <><button className="back-role" onClick={()=>{setRole(null);setOtpSent(false);setOtp('');setLoginMessage('')}}>← Change role</button><div className="login-icon">{role==='engineer'?<Wrench/>:<UserRound/>}</div><p className="eyebrow">{role==='engineer'?'ENGINEER LOGIN':'USER LOGIN'}</p><h2>{otpSent ? 'Enter OTP' : `Continue as ${role==='engineer'?'Engineer':'User'}`}</h2><p className="login-subtitle">{otpSent ? `OTP sent for +91 ${mobile}` : 'Enter your mobile number to continue.'}</p>{!otpSent ? <><label>Mobile Number</label><input className="mobile-input" type="tel" value={mobile} onChange={e=>setMobile(e.target.value.replace(/\D/g,'').slice(0,10))} placeholder="10-digit mobile number" maxLength="10"/><button className="continue-btn" onClick={sendOtp}>Send OTP <ArrowRight size={17}/></button></> : <><label>6-digit OTP</label><input className="mobile-input" type="tel" inputMode="numeric" value={otp} onChange={e=>setOtp(e.target.value.replace(/\D/g,'').slice(0,6))} placeholder="Enter OTP" maxLength="6"/><button className="continue-btn" onClick={verifyOtp}>Verify & Login <ArrowRight size={17}/></button><button className="back-role" onClick={()=>{setOtpSent(false);setOtp('');setDevOtp('');setLoginMessage('')}}>← Change mobile number</button></>}{loginMessage && <p className="login-message">{loginMessage}</p>}{devOtp && <p className="dev-note">Frontend demo mode: use the OTP shown above. Backend will be connected later.</p>}</>}</div></div>}
     </div>
   )
 }
