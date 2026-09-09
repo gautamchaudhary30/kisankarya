@@ -1,6 +1,6 @@
 import { ArrowLeft, BadgeCheck, ChevronRight, Heart, MapPin, MessageCircle, Phone, ShieldCheck, Share2 } from 'lucide-react'
 
-export default function ListingDetail({ item, onBack }) {
+export default function ListingDetail({ item, onBack, onMessage }) {
   if (!item) return null
   const isTractor = item.category === 'Tractor' || item.meta?.includes('HP')
   const specs = isTractor
@@ -30,6 +30,6 @@ export default function ListingDetail({ item, onBack }) {
       <div className="detail-section location-card"><div className="map-placeholder"><MapPin size={25}/></div><div><span>LOCATION</span><b>{item.location}</b><small>Exact address shared after connecting with seller</small></div></div>
       <div className="safety-note"><ShieldCheck size={20}/><div><b>Buy safely</b><p>Inspect the item, verify documents where applicable, and avoid sending advance payment before meeting the seller.</p></div></div>
     </section>
-    <div className="detail-actions"><button className="call-btn"><Phone size={17}/> Call</button><button className="message-btn"><MessageCircle size={17}/> Message seller</button></div>
+    <div className="detail-actions"><button className="call-btn"><Phone size={17}/> Call</button><button className="message-btn" onClick={onMessage}><MessageCircle size={17}/> Message seller</button></div>
   </main>
 }
